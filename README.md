@@ -1,0 +1,2 @@
+Website ini merupakan sebuah web sederhana dimana ada fitur autentikasi pengguna, dan pengguna bisa meng-upload sebuah kalimat bebas, bisa pendapat, ilmu, saran, ajakan, dan lain sebagainya. Web ini juga menyediakan fitur tanggapan kepada postingan pengguna lain, agar para pengguna dapat berinteraksi satu sama lain. Pengguna juga dapat mengedit profil mereka sendiri seperti mengubah nama, profil, dan bio.
+Website ini dibuat hanya sebagai bahan pembelajaran.
