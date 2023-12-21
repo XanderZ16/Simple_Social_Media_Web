@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Link to bulma css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <!-- Link to font awasome -->
+    <script src="https://kit.fontawesome.com/ef4cce5f3f.js" crossorigin="anonymous"></script>
+    <!-- Link to jquery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <!-- Link to jquery cookies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"
+        integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Link to my css style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/style.css') }}">
+
+    <title>Login Page</title>
+</head>
+
+<body>
+    <section class="hero is-white">
+        <div class="hero-body has-text-centered banner">
+            <h1 class="title is-xander">SWEETER</h1>
+            <h3 class="subtitle is-xander">This is subtitle</h3>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="box">
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <!-- Login Box -->
+                            <div id="login-box">
+                                <div class="mb-5">
+                                    <div class="field">
+                                        <div class="control has-icons-left mb-3" style="width: 100%">
+                                            <input id="login-input-name" class="input" type="text" placeholder="name" autofocus>
+                                            <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                                        </div>
+                                        <div class="control has-icons-left" style="width: 100%">
+                                            <input id="login-input-password" class="input" type="password"
+                                                placeholder="password">
+                                            <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <nav class="level is-mobile">
+                                    <button class="level-item button is-xander mb-3" onclick="login()">
+                                        Login
+                                    </button>
+                                    <button class="level-item button is-sparta is-outlined mb-3"
+                                        onclick="clear_input()">
+                                        Clear
+                                    </button>
+                                </nav>
+                                <h4
+                                    class="mb-3 has-text-centered has-text-weight-light is-size-7 has-text-weight-semibold">
+                                    If you have not yet
+                                    register</h4>
+                                <nav class="level is-mobile">
+                                    <button class="level-item button is-xander is-outlined" onclick="toggle_register()">
+                                        Register
+                                    </button>
+                                </nav>
+                            </div>
+
+                            <!-- Register Box -->
+                            <div class="hidden-box" id="register-box">
+                                <!-- Input box for name -->
+                                <div class="field has-addons">
+                                    <div class="control has-icons-left input-box">
+                                        <input type="text" id="reg-input-name" class="input" placeholder="name">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                    </div>
+                                    <div id="btn-check-dup" class="control">
+                                        <button class="button is-xander" onclick="check_dup()">Check Your Name</button>
+                                    </div>
+                                </div>
+                                <p id="reg-help-name" class="help">
+                                    For your id, please type 2-10 english characters, numbers, or special characters
+                                </p>
+
+                                <!-- Input box for password -->
+                                <div class="field mb-5">
+                                    <div class="control has-icons-left input-box">
+                                        <input type="password" id="reg-input-password" class="input"
+                                            placeholder="password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <p id="reg-help-password" class="help">
+                                        For your password, please type 8-20 english characters, numbers, or special
+                                        characters
+                                    </p>
+                                    <div class="control has-icons-left input-box">
+                                        <input type="password" id="reg-input-password2" class="input"
+                                            placeholder="confirm password">
+                                        <span class="icon is-small is-left">
+                                            <i class="fa fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <p id="reg-help-password2" class="help">
+                                        Input your password again
+                                    </p>
+                                </div>
+
+                                <div id="login-or-register">
+                                    <nav class="level is-mobile">
+                                        <button class="level-item button is-xander" onclick="register()">
+                                            Register
+                                        </button>
+                                        <button class="level-item button is-sparta is-outlined"
+                                            onclick="toggle_register()">
+                                            Cancel
+                                        </button>
+                                        <button class="level-item button is-sparta is-outlined" onclick="clear_input()">
+                                            Clear
+                                        </button>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function login() {
+            let name = $('#login-input-name').val();
+            let password = $('#login-input-password').val();
+
+            if (name == '') {
+                alert('Username field is empty!')
+                return;
+            } else if (password == '') {
+                alert('Password field is empty!')
+                return;
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/login',
+                data: {
+                    'name_give': name,
+                    'password_give': password
+                },
+                success: function (response) {
+                    if (response['result'] === 'success') {
+                        let token = response['mytoken'];
+                        console.log(token)
+                        $.cookie('mytoken', token);
+                        alert('Login completed');
+                        window.location.href = '/';
+                    } else {
+                        alert(response['msg']);
+                    }
+                }
+            });
+        }
+
+        function register() {
+            let input_password = $('#reg-input-password');
+            let input_password2 = $('#reg-input-password2');
+
+            let name = $('#reg-input-name').val();
+            let password = input_password.val();
+            let password2 = input_password2.val();
+
+            let help_name = $('#reg-help-name')
+            let help_password = $('#reg-help-password')
+            let help_password2 = $('#reg-help-password2')
+
+            if (help_name.hasClass('is-danger') || !help_name.hasClass('is-success')) {
+                alert('Please check your name again');
+                return
+            }
+
+            // input password logic
+            if (password === '') {
+                help_password.text('Please enter your password')
+                    .removeClass('is-safe')
+                    .addClass('is-danger');
+                input_password.focus();
+                return;
+            } else if (!is_password(password)) {
+                help_password.text('For your password, please type 8-20 english characters, numbers, or special characters')
+                    .removeClass('is-safe')
+                    .addClass('is-danger');
+                input_password.focus();
+                return;
+            } else {
+                help_password.text('This password can be used')
+                    .removeClass('is-danger')
+                    .addClass('is-success');
+            }
+
+            // confirmation password logic
+            if (password2 === '') {
+                help_password2.text('Please confirm your password')
+                    .removeClass('is-safe')
+                    .addClass('is-danger');
+                input_password2.focus();
+                return;
+            } else if (password2 != password) {
+                help_password2.text('Your password confirmation not match')
+                    .removeClass('is-safe')
+                    .addClass('is-danger');
+                input_password2.focus();
+                return;
+            } else {
+                help_password2.text('Password match')
+                    .removeClass('is-danger')
+                    .addClass('is-success');
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/register',
+                data: {
+                    name_give: name,
+                    password_give: password
+                },
+                success: function (response) {
+                    if (response['result'] === 'success') {
+                        alert(response['msg'])
+                        window.location.href = '/auth';
+                    }
+                }
+            });
+        }
+
+        function toggle_register() {
+            $("#login-box").toggleClass("hidden-box");
+            $("#register-box").toggleClass("hidden-box");
+        }
+
+        function is_name(asValue) {
+            var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
+            return regExp.test(asValue);
+        }
+
+        function is_password(asValue) {
+            var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
+            return regExp.test(asValue);
+        }
+
+        function check_dup() {
+            let input_name = $('#reg-input-name')
+            let help_name = $('#reg-help-name')
+            let name = input_name.val();
+            if (name === '') {
+                help_name.text('Please enter your id')
+                    .removeClass('is-safe')
+                    .addClass('is-danger');
+                input_name.focus();
+                return;
+            }
+
+            console.log(name)
+
+            if (!is_name(name)) {
+                help_name.text('For your id, please type 2-10 english characters, numbers, or special characters')
+                    .removeClass('is-safe')
+                    .addClass('is-danger');
+                input_name.focus();
+                return;
+            }
+
+            help_name.addClass('is-loading');
+            $.ajax({
+                type: 'POST',
+                url: '/register/check-dup',
+                data: {
+                    'name_give': name
+                },
+                success: function (response) {
+                    if (response['exists']) {
+                        help_name.text('This name already used')
+                            .removeClass('is-safe')
+                            .addClass('is-danger');
+                        input_name.focus();
+                    } else {
+                        help_name.text('This name can be used')
+                            .removeClass('is-danger')
+                            .addClass('is-success');
+                    }
+                    help_name.removeClass('is-loading');
+                }
+            })
+        }
+
+        function clear_input() {
+            $('.input').val('');
+        }
+    </script>
+</body>
+
+</html>
